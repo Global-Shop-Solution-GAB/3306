@@ -1,0 +1,874 @@
+Program.Sub.ScreenSU.Start
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+	'JOB_HEADER table
+
+	V.UDT.Master.Define("Job",String,"Job")
+	V.UDT.Master.Define("Suffix",String,"Suffix")
+	V.UDT.Master.Define("Date_Opened",String,"Date_Opened")
+	V.UDT.Master.Define("Date_Due",String,"Date_Due")
+	V.UDT.Master.Define("Part",String,"Part")
+	V.UDT.Master.Define("Part_Description",String,"Part_Description")
+	V.UDT.Master.Define("Router",String,"Router")
+	V.UDT.Master.Define("Router_Description",String,"Description")
+	V.UDT.Master.Define("Qty_Order",Long,"Qty_Order")
+	'These fields must be zeroed out
+
+	V.UDT.Master.Define("PRIORITY",String,"PRIORITY")
+	V.UDT.Master.Define("QTY_COMPLETED",Long,"QTY_COMPLETED")
+	V.UDT.Master.Define("DATE_CLOSED",String,"DATE_CLOSED")
+ 	V.UDT.Master.Define("DATE_START",String,"DATE_START")
+ 	V.UDT.Master.Define("DATE_SCH_CMPL_INF",String,"DATE_SCH_CMPL_INF")
+ 	V.UDT.Master.Define("DATE_SCH_CMPL_FIN",String,"DATE_SCH_CMPL_FIN")
+ 	V.UDT.Master.Define("DATE_LAST_SCH_INF",String,"DATE_LAST_SCH_INF")
+ 	V.UDT.Master.Define("DATE_ORIG_DUE",String,"DATE_ORIG_DUE")
+ 	V.UDT.Master.Define("AMT_PRICE_PER_UNIT",Long,"AMT_PRICE_PER_UNIT")
+ 	V.UDT.Master.Define("AMT_SALES",Long,"AMT_SALES")
+ 	V.UDT.Master.Define("AMT_MATERIAL",Long,"AMT_MATERIAL")
+ 	V.UDT.Master.Define("NUM_HOURS",Long,"NUM_HOURS")
+ 	V.UDT.Master.Define("AMT_LABOR",Long,"AMT_LABOR")
+ 	V.UDT.Master.Define("AMT_OVERHEAD",Long,"AMT_OVERHEAD")
+ 	V.UDT.Master.Define("AMT_PARTIAL_SHPMNT",Long,"AMT_PARTIAL_SHPMNT")
+ 	V.UDT.Master.Define("DATE_START_OTHER",String,"DATE_START_OTHER")
+ 	V.UDT.Master.Define("HOUR_START",Long,"HOUR_START")
+ 	V.UDT.Master.Define("SYSTEM_PRIORITY",Long,"SYSTEM_PRIORITY")
+ 	V.UDT.Master.Define("AMT_BILLED_DATE",Long,"AMT_BILLED_DATE")
+ 	V.UDT.Master.Define("UNITS_BILLED_DATE",Long,"UNITS_BILLED_DATE")
+ 	V.UDT.Master.Define("DATE_SHIP_1",String,"DATE_SHIP_1")
+ 	V.UDT.Master.Define("DATE_SHIP_2",String,"DATE_SHIP_2")
+ 	V.UDT.Master.Define("DATE_SHIP_3",String,"DATE_SHIP_3")
+ 	V.UDT.Master.Define("DATE_SHIP_4",String,"DATE_SHIP_4")
+ 	V.UDT.Master.Define("QTY_SHIP_1",Long,"QTY_SHIP_1")
+ 	V.UDT.Master.Define("QTY_SHIP_2",Long,"QTY_SHIP_2")
+ 	V.UDT.Master.Define("QTY_SHIP_3",Long,"QTY_SHIP_3")
+ 	V.UDT.Master.Define("QTY_SHIP_4",Long,"QTY_SHIP_4")
+ 	V.UDT.Master.Define("DATE_LAST_SCH_FIN",String,"DATE_LAST_SCH_FIN")
+ 	V.UDT.Master.Define("DATE_DUE_NEW",String,"DATE_DUE_NEW")
+ 	V.UDT.Master.Define("CTR_DATE_REVUE_DUE",Long,"CTR_DATE_REVUE_DUE")
+ 	V.UDT.Master.Define("CTR_DATE_DUE_NEW",Long,"CTR_DATE_DUE_NEW")
+ 	V.UDT.Master.Define("QTY_CUSTOMER",Long,"QTY_CUSTOMER")
+ 	V.UDT.Master.Define("DATE_MATERIAL_DUE",String,"DATE_MATERIAL_DUE")
+ 	V.UDT.Master.Define("CTR_DATE_MATL_DUE",Long,"CTR_DATE_MATL_DUE")
+ 	V.UDT.Master.Define("DATE_MATL_ORDER",String,"DATE_MATL_ORDER")
+ 	V.UDT.Master.Define("PARTIAL_MATERIAL",Long,"PARTIAL_MATERIAL")
+ 	V.UDT.Master.Define("PARTIAL_LABOR",Long,"PARTIAL_LABOR")
+ 	V.UDT.Master.Define("PARTIAL_OVERHEAD",Long,"PARTIAL_OVERHEAD")
+ 	V.UDT.Master.Define("DATE_RELEASED",String,"DATE_RELEASED")
+ 	V.UDT.Master.Define("SALES_ORDER",String,"SALES_ORDER")
+ 	V.UDT.Master.Define("SALES_ORDER_LINE",String,"SALES_ORDER_LINE")
+ 	V.UDT.Master.Define("OUTS",Long,"OUTS")
+ 	V.UDT.Master.Define("PARTIAL_OUTSIDE",Long,"PARTIAL_OUTSIDE")
+ 	V.UDT.Master.Define("SCHEDULED_DUE_DATE",String,"SCHEDULED_DUE_DATE")
+ 	V.UDT.Master.Define("DUE_OFFSET",Long,"DUE_OFFSET")
+ 	V.UDT.Master.Define("SCHEDULE_DIR",String,"SCHEDULE_DIR")
+ 	V.UDT.Master.Define("SPECIAL_START_SEQ",String,"SPECIAL_START_SEQ")
+ 	V.UDT.Master.Define("SPECIAL_STOP_SEQ",String,"SPECIAL_STOP_SEQ")
+ 	V.UDT.Master.Define("JOB_TYPE",String,"JOB_TYPE")
+
+
+	V.uGlobal.uMaster.Declare("Master")
+	
+	'writes to JOB_OPERATIONS table
+	V.UDT.Ops.Define("Job",String,"Job")
+	V.UDT.Ops.Define("Suffix",String,"Suffix")
+	V.UDT.Ops.Define("Seq",String,"Seq")
+	V.UDT.Ops.Define("Operation",String,"Operation")
+	V.UDT.Ops.Define("Description",String,"Description")
+	V.UDT.Ops.Define("LMO",String,"LMO")
+	V.UDT.Ops.Define("Setup",Long,"Setup")
+	V.UDT.Ops.Define("Part",String,"Part")
+	V.UDT.Ops.Define("Date_Start",String,"Date_Start")
+	V.UDT.Ops.Define("Date_Due",String,"Date_Due")
+
+	'fields must be zeroed out
+	V.UDT.Ops.Define("WO_Insert",String,"WO_Insert")
+	V.UDT.Ops.Define("Units",Long,"Units")
+	V.UDT.Ops.Define("Burden",Long,"Burden")
+	V.UDT.Ops.Define("Router",String,"Router")
+	V.UDT.Ops.Define("Router_Seq",String,"Router_Seq")
+	V.UDT.Ops.Define("Units_Open",Long,"Units_Open")
+	V.UDT.Ops.Define("Units_Complete",Long,"Units_Complete")
+	V.UDT.Ops.Define("Percent_Complete",Long,"Percent_Complete")
+	V.UDT.Ops.Define("Units_Scrap",Long,"Units_Scrap")
+	V.UDT.Ops.Define("Units_Committed",Long,"Units_Committed")
+	V.UDT.Ops.Define("Dollars_Committed",Long,"Dollars_Committed")
+	V.UDT.Ops.Define("Rate_Burden",Long,"Rate_Burden")
+	V.UDT.Ops.Define("Hours_Estimated",Long,"Hours_Estimated")
+	V.UDT.Ops.Define("Hours_Actual",Long,"Hours_Actual")
+	V.UDT.Ops.Define("Dollars_Estimated",Long,"Dollars_Estimated")
+	V.UDT.Ops.Define("Dollars_Actual",Long,"Dollars_Actual")
+	V.UDT.Ops.Define("Min_Sched_Block",Long,"Min_Sched_Block")
+ 	V.UDT.Ops.Define("TIME_START",Long,"TIME_START")
+ 	V.UDT.Ops.Define("MACHINE_HRS",Long,"MACHINE_HRS")
+ 	V.UDT.Ops.Define("ALLOW_CHRG",String,"ALLOW_CHRG")
+ 	V.UDT.Ops.Define("DATE_ARRIVED",String,"DATE_ARRIVED")
+ 	V.UDT.Ops.Define("TIME_ARRIVED",Long,"TIME_ARRIVED")
+ 	V.UDT.Ops.Define("DATE_MATERIAL_DUE",String,"DATE_MATERIAL_DUE")
+ 	V.UDT.Ops.Define("DATE_COMPLETED",String,"DATE_COMPLETED")
+ 	V.UDT.Ops.Define("TIME_ELAPSED",Long,"TIME_ELAPSED")
+ 	V.UDT.Ops.Define("FACTOR_WORKCENTER",Long,"FACTOR_WORKCENTER")
+ 	V.UDT.Ops.Define("FACTOR_FINITE",Long,"FACTOR_FINITE")
+ 	V.UDT.Ops.Define("OVERLAP",Long,"OVERLAP")
+ 	V.UDT.Ops.Define("DATE_PO_ORDER",String,"DATE_PO_ORDER")
+ 	V.UDT.Ops.Define("SEQ_PO",String,"SEQ_PO")
+ 	V.UDT.Ops.Define("YIELD",Long,"YIELD")
+ 	V.UDT.Ops.Define("YIELD_RATIO",Long,"YIELD_RATIO")
+ 	V.UDT.Ops.Define("TASK_SIGNOFF_DATE",String,"TASK_SIGNOFF_DATE")
+ 	V.UDT.Ops.Define("DATE_OPER_SK_YEAR",Long,"DATE_OPER_SK_YEAR")
+ 	V.UDT.Ops.Define("DATE_OPER_SK_MDY",String,"DATE_OPER_SK_MDY")
+ 	V.UDT.Ops.Define("DATE_OPER_ST_YEAR",Long,"DATE_OPER_ST_YEAR")
+ 	V.UDT.Ops.Define("DATE_OPER_ST_MDY",String,"DATE_OPER_ST_MDY")
+ 	V.UDT.Ops.Define("CREW_SIZE",Long,"CREW_SIZE")
+ 	V.UDT.Ops.Define("RATE_PIECE",Long,"RATE_PIECE")
+ 	V.UDT.Ops.Define("TIME_DUE",Long,"TIME_DUE")
+ 	V.UDT.Ops.Define("FREQUENCY",Long,"FREQUENCY")
+ 	V.UDT.Ops.Define("UNIT_D6",Long,"UNIT_D6")
+ 	V.UDT.Ops.Define("PRICE_PERCENT",Long,"PRICE_PERCENT")
+ 	V.UDT.Ops.Define("LEAD_TIME",Long,"LEAD_TIME")
+ 	V.UDT.Ops.Define("E_MINIMUM",Long,"E_MINIMUM")
+
+	V.uGlobal.uOps.Declare("Ops")
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'Coded by: Melinda Keyes
+'Project Start Date: 11/11/2011
+'Quote: 2979
+'Other Components:
+'  This program will be able to be run automatically through Task Scheduler Maintenance and manually through a custom menu item.
+'Notes:
+'   All .csv files requiring import will be stored in the Global\files\Import directory. Each import will be either a job operation import or job master import. Each master .csv will contain the following fields:
+'  Work Order number, suffix, date opened, date due, part number, router number, and run qty. Each operation .csv will contain the following fields: Work Order number, suffix, sequence, operation, LMOC, setup time required, and PWC.
+'  Note: the .csv will not contain any header information.
+'  All job master imports should be parsed first, followed by all job operation imports. Job records will not be abled to be updated via this import. Only new jobs will be created. All changes to jobs/operations will be made manually.
+'  Once all records have been imported for the .csv file, move the file to the Global\files\import\history directory and rename the file to JOBDDMMCCSS (where D is day, M is month, C is century and S is sequential). The program will also need to create a log file while importing data.
+'  This log file should be saved to Global\files\import\logs and included a record of successful updates and any errors encountered. Only after all imports have been loaded and the log file created, jobs should be automatically backscheduled by the GAB script.
+'  Note: If the customer ID does not exist in Global Shop, the import process will error out. Either don't include customer ID's on work orders or verify that all customers are loaded into Global Shop.
+
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sDir.Declare(String)
+V.Local.sDir2.Declare(String)
+V.Local.sFile.Declare(String)
+V.Local.sFileList.Declare(String)
+V.Local.sOpList.Declare(String)
+V.Local.sMstrList.Declare(String)
+V.Local.sParam.Declare(String)
+V.Local.sDate.Declare(String)
+V.Local.sTime.Declare(String)
+V.Local.bCobolRunning.Declare(Boolean)
+V.Local.bExists.Declare(Boolean)
+V.Local.bMstr.Declare(Boolean)
+V.Local.bOps.Declare(Boolean)
+V.Local.iC.Declare(Long)
+
+V.Global.iErrHndl.Declare(Long)
+
+F.ODBC.Connection!conX.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+
+'open up import file directory
+F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\",V.Local.sDir)
+F.Intrinsic.File.DirExists(V.Local.sDir,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists,<>,True)
+	F.Intrinsic.File.CreateDir(V.Local.sDir)
+F.Intrinsic.Control.EndIf
+'open up the logging file
+F.Intrinsic.String.Stripcharacters(V.Ambient.Date,V.Local.sDate)
+F.Intrinsic.String.Stripcharacters(V.Ambient.Time,V.Local.sTime)
+F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\Logs",V.Local.sDir2)
+F.Intrinsic.File.DirExists(V.Local.sDir2,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists,<>,True)
+	F.Intrinsic.File.CreateDir(V.Local.sDir2)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.String.Concat(V.Local.sDir2,"\Job_Imports",V.Local.sDate,"_",V.Local.sTime,".log",V.Local.sFile)
+F.Intrinsic.File.GetHandle(V.Global.iErrHndl)
+F.Intrinsic.File.Exists(V.Local.sFile,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists,=,True)
+	F.Intrinsic.File.OpenForAppend(V.Local.sFile,V.Global.iErrHndl)
+F.Intrinsic.Control.Else
+	F.Intrinsic.File.OpenForWrite(V.Local.sFile,V.Global.iErrHndl)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Concat("Logging file opened at ",V.Ambient.Now,V.Local.sError)
+F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+F.Intrinsic.Control.CallSub(Write_error,"sLine","Gathering file list.")
+
+'get the list of files in the import directory
+F.Intrinsic.File.GetFileList(V.Local.sDir,V.Local.sFileList)
+F.Intrinsic.String.Split(V.Local.sFileList,":",V.Local.sFileList)
+F.Intrinsic.Control.For(V.Local.iC,0,V.Local.sFileList.UBound,1)
+	'create lists of job master and job ops records
+	F.Intrinsic.String.IsInString(V.Local.sFileList(V.Local.iC),"jobmstr",True,V.Local.bMstr)
+	F.Intrinsic.String.IsInString(V.Local.sFileList(V.Local.iC),"jobops",True,V.Local.bOps)
+	F.Intrinsic.Control.If(V.Local.bMstr,=,True)
+		F.Intrinsic.String.Concat(V.Local.sMstrList,V.Local.sFileList(V.Local.iC),":",V.Local.sMstrList)
+	F.Intrinsic.Control.ElseIf(V.Local.bOps,=,True)
+		F.Intrinsic.String.Concat(V.Local.sOpList,V.Local.sFileList(V.Local.iC),":",V.Local.sOpList)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iC)
+
+'import all job master files first and then all job op files
+F.Intrinsic.Control.CallSub(Write_error,"sLine","Beginning import of Master files.")
+F.Intrinsic.Control.CallSub(Job_mstr,"sMstrList",V.Local.sMstrList)
+F.Intrinsic.Control.CallSub(Write_error,"sLine","Master files imported. Beginning import of Operation files.")
+F.Intrinsic.Control.CallSub(Job_operations,"sOpList",V.Local.sOpList)
+F.Intrinsic.Control.CallSub(Write_error,"sLine","Operation files imported.")
+
+'auto backschedule
+F.Intrinsic.Control.CallSub(Write_error,"sLine","Backscheduling jobs.")
+
+F.Intrinsic.Control.For(V.Local.iC,0,V.uGlobal.uMaster.UBound,1)
+'	F.Intrinsic.Debug.CallWrapperDebugEnable
+'	F.Global.APS.ScheduleJob(V.uGlobal.uMaster(V.Local.iC)!Job,V.uGlobal.uMaster(V.Local.iC)!Suffix,"B",V.Ambient.Now)
+	F.Intrinsic.String.Concat(V.uGlobal.uMaster(V.Local.iC)!DATE_Opened,"!*!",V.uGlobal.uMaster(V.Local.iC)!Date_Due,"!*!",V.uGlobal.uMaster(V.Local.iC)!Job,"!*!",V.uGlobal.uMaster(V.Local.iC)!Suffix,"!*!!*!B",V.Local.sParam)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sParam)
+
+	V.Local.bCobolRunning.Set(True)
+	F.Intrinsic.Control.DoUntil(V.Local.bCobolRunning,=,False)
+		F.Intrinsic.Control.CallSub(Check_processes)
+		V.Local.bCobolRunning.Set(V.Args.bRunning)
+	F.Intrinsic.Control.Loop
+
+	F.Global.General.CallWrapperSync("500030",V.Local.sParam)
+
+	F.Intrinsic.Control.next(V.Local.iC)
+F.Intrinsic.Control.CallSub(Write_error,"sLine","Backscheduling complete. Closing log.")
+
+F.Intrinsic.File.CloseFile(V.Global.iErrHndl)
+
+F.ODBC.Connection!conX.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: ATG_JOB_IMPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.Main.End
+
+Program.Sub.Job_mstr.Start
+F.Intrinsic.Control.SetErrorHandler("Job_mstr_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sMstrList.Declare(String)
+V.Local.sDir.Declare(String)
+V.Local.sFile.Declare(String)
+V.Local.sFileName.Declare(String)
+V.Local.sRecord.Declare(String)
+V.Local.sBackup.Declare(String)
+V.Local.sMisc.Declare(String)
+V.Local.sMiscRec.Declare(String)
+V.Local.sFQN.Declare(String)
+V.Local.sFQN2.Declare(String)
+V.Local.sQuery.Declare(String)
+V.Local.sDate.Declare(String)
+V.Local.sTime.Declare(String)
+V.Local.bExists.Declare(Boolean)
+V.Local.iC.Declare(Long)
+V.Local.iC2.Declare(Long)
+V.Local.iRet.Declare(Long)
+V.Local.iUB.Declare(Long)
+V.Local.iUB2.Declare(Long)
+V.Local.sRecord.Declare(String)
+
+V.Local.sMstrList.Set(V.Args.sMstrList)
+
+F.Intrinsic.String.Split(V.Local.sMstrList,":",V.Local.sMstrList)
+F.Intrinsic.Math.Sub(V.Local.sMstrList.UBound,1,V.Local.iUB)
+
+F.Intrinsic.Control.If(V.Local.iUB,=,-1)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine","No job master imports were found.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.For(V.Local.iC,0,V.Local.iUB,1)
+	V.Local.sFile.Set(V.Local.sMstrList(V.Local.iC))
+	V.Local.sFileName.Set(V.Local.sMstrList(V.Local.iC))
+	F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\",V.Local.sFile,V.Local.sFQN)
+	F.Intrinsic.File.Exists(V.Local.sFQN,V.Local.bExists)
+
+	F.Intrinsic.Control.If(V.Local.bExists,=,True)
+		F.Intrinsic.File.File2String(V.Local.sFQN,V.Local.sFile)
+		F.Intrinsic.String.Split(V.Local.sFile,V.Ambient.NewLine,V.Local.sFile)
+		F.Intrinsic.Math.Sub(V.Local.sFile.UBound,1,V.Local.iUB2)
+'		F.Intrinsic.Control.If(V.Local.iUB2,=,-1)
+'			V.Local.iUB2.Set(1)
+'		F.Intrinsic.Control.EndIf
+		'loop through each record and add to the UDT
+		F.Intrinsic.Control.For(V.Local.iC2,0,V.Local.iUB2,1)
+			V.Local.sRecord.Set(V.Local.sFile(V.Local.iC2))
+			'note: record has indexes 0-6, 1 is null: Work Order number, suffix, date opened, date due, part number, router number, and run qty
+			F.Intrinsic.Control.CallSub(Import_record,"sRecord",V.Local.sRecord,"iMode",1,"sFile",V.Local.sFileName,"bMisc",True)
+			F.Intrinsic.String.SplitCSV(V.Local.sRecord,V.Local.sMisc)
+			'add default misc sequences for imported jobs
+			F.Intrinsic.String.Concat(V.Local.sMisc(0),",",V.Local.sMisc(1),",995000,,MISCELLANEOUS MATERIAL,M,,",V.Local.sMiscRec)
+			F.Intrinsic.Control.CallSub(Import_record,"sRecord",V.Local.sMiscRec,"iMode",2,"sFile","Add Misc Material","bMisc",True)
+			F.Intrinsic.String.Concat(V.Local.sMisc(0),",",V.Local.sMisc(1),",996000,,MISCELLANEOUS LABOR,L,,",V.Local.sMiscRec)
+			F.Intrinsic.Control.CallSub(Import_record,"sRecord",V.Local.sMiscRec,"iMode",2,"sFile","Add Misc Labor","bMisc",True)
+			F.Intrinsic.String.Concat(V.Local.sMisc(0),",",V.Local.sMisc(1),",997000,,MISCELLANEOUS OUTSIDE,O,,",V.Local.sMiscRec)
+			F.Intrinsic.Control.CallSub(Import_record,"sRecord",V.Local.sMiscRec,"iMode",2,"sFile","Add Misc Outside","bMisc",True)
+			F.Intrinsic.String.Concat(V.Local.sMisc(0),",",V.Local.sMisc(1),",998000,,REWORK MATERIAL,M,,",V.Local.sMiscRec)
+			F.Intrinsic.Control.CallSub(Import_record,"sRecord",V.Local.sMiscRec,"iMode",2,"sFile","Add Rework Material","bMisc",True)
+			F.Intrinsic.String.Concat(V.Local.sMisc(0),",",V.Local.sMisc(1),",998500,,REWORK LABOR,L,,",V.Local.sMiscRec)
+			F.Intrinsic.Control.CallSub(Import_record,"sRecord",V.Local.sMiscRec,"iMode",2,"sFile","Add Rework Labor","bMisc",True)
+		F.Intrinsic.Control.Next(V.Local.iC2)
+
+		'rename and move the file to indicate completed import
+		F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\History\",V.Local.sDir)
+		F.Intrinsic.File.DirExists(V.Local.sDir,V.Local.bExists)
+		F.Intrinsic.Control.If(V.Local.bExists,<>,True)
+			F.Intrinsic.File.CreateDir(V.Local.sDir)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Stripcharacters(V.Ambient.Date,V.Local.sDate)
+		F.Intrinsic.String.Stripcharacters(V.Ambient.Time,V.Local.sTime)
+		F.Intrinsic.String.Concat("JOBMSTR",V.Local.sDate,"_",V.Local.sTime,".csv",V.Local.sBackup)
+		F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\",V.Local.sBackup,V.Local.sFQN2)
+		F.Intrinsic.File.MoveFile(V.Local.sFQN,V.Local.sFQN2,V.Local.iRet)
+		F.Intrinsic.Control.If(V.Local.iRet,=,0)
+			F.Intrinsic.String.Concat("Error: Renaming file ",V.Local.sFQN," to ",V.Local.sFQN2," failed.",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Concat("Renaming file ",V.Local.sFQN," to ",V.Local.sFQN2," succeeded.",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\History\",V.Local.sBackup,V.Local.sFQN)
+		F.Intrinsic.File.MoveFile(V.Local.sFQN2,V.Local.sFQN,V.Local.iRet)
+		F.Intrinsic.Control.If(V.Local.iRet,=,0)
+			F.Intrinsic.String.Concat("Error: Moving file ",V.Local.sFQN," to ",V.Local.sFQN2," failed.",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Concat("Moving file ",V.Local.sFQN," to ",V.Local.sFQN2," succeeded.",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iC)
+
+'F.Intrinsic.String.RemoveArrayDuplicates("V.uGlobal.uMaster","V.uGlobal.uMaster")
+
+F.Intrinsic.Math.Sub(V.uGlobal.uMaster.UBound,1,V.Local.iUB)
+F.Intrinsic.Control.If(V.Local.iUB,=,-1)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine","No job master imports were found.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+V.uGlobal.uMaster.RedimPreserve(0,V.Local.iUB)
+
+'Add the UDT records to the database
+F.ODBC.Connection!conX.OpenRecordsetRW("rst","SELECT * FROM JOB_HEADER")
+	F.Intrinsic.Variable.SaveUDTtoRecordset("conX","rst","V.uGlobal.uMaster")
+F.ODBC.conX!rst.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Job_mstr_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: ATG_JOB_IMPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.Job_mstr.End
+
+Program.Sub.Job_operations.Start
+F.Intrinsic.Control.SetErrorHandler("Job_operations_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sOpList.Declare(String)
+V.Local.sDir.Declare(String)
+V.Local.sFile.Declare(String)
+V.Local.sFileName.Declare(String)
+V.Local.sRecord.Declare(String)
+V.Local.sFQN.Declare(String)
+V.Local.sFQN2.Declare(String)
+V.Local.sDate.Declare(String)
+V.Local.sTime.Declare(String)
+V.Local.sBackup.Declare(String)
+V.Local.bExists.Declare(Boolean)
+V.Local.iC.Declare(Long)
+V.Local.iC2.Declare(Long)
+V.Local.iRet.Declare(Long)
+V.Local.iUB.Declare(Long)
+V.Local.iUB2.Declare(Long)
+
+V.Local.sOpList.Set(V.Args.sOpList)
+
+F.Intrinsic.String.Split(V.Local.sOpList,":",V.Local.sOpList)
+F.Intrinsic.Math.Sub(V.Local.sOpList.UBound,1,V.Local.iUB)
+
+F.Intrinsic.Control.If(V.Local.iUB,=,-1)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine","No job operations imports were found.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.For(V.Local.iC,0,V.Local.iUB,1)
+	V.Local.sFile.Set(V.Local.sOpList(V.Local.iC))
+	V.Local.sFileName.Set(V.Local.sOpList(V.Local.iC))
+	F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\",V.Local.sFile,V.Local.sFQN)
+	F.Intrinsic.File.Exists(V.Local.sFQN,V.Local.bExists)
+	F.Intrinsic.Control.If(V.Local.bExists,=,True)
+		F.Intrinsic.File.File2String(V.Local.sFQN,V.Local.sFile)
+		F.Intrinsic.String.Split(V.Local.sFile,V.Ambient.NewLine,V.Local.sFile)
+		F.Intrinsic.Math.Sub(V.Local.sFile.UBound,1,V.Local.iUB2)
+		F.Intrinsic.Control.For(V.Local.iC2,0,V.Local.iUB2,1)
+			V.Local.sRecord.set(V.Local.sFile(V.Local.iC2))
+			'note: record has indexes 0-6, 1 is null: 'WO num, suffix, seq, operation, desc of operation, LMOC, setup time req, PWC
+			F.Intrinsic.Control.CallSub(Import_record,"sRecord",V.Local.sRecord,"iMode",2,"sFile",V.Local.sFileName,"bMisc",False)
+		F.Intrinsic.Control.Next(V.Local.iC2)
+
+		'rename and move the file to indicate completed import
+		F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\History\",V.Local.sDir)
+		F.Intrinsic.File.DirExists(V.Local.sDir,V.Local.bExists)
+		F.Intrinsic.Control.If(V.Local.bExists,<>,True)
+			F.Intrinsic.File.CreateDir(V.Local.sDir)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Stripcharacters(V.Ambient.Date,V.Local.sDate)
+		F.Intrinsic.String.Stripcharacters(V.Ambient.Time,V.Local.sTime)
+		F.Intrinsic.String.Concat("JOBOPS",V.Local.sDate,"_",V.Local.sTime,".csv",V.Local.sBackup)
+		F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\",V.Local.sBackup,V.Local.sFQN2)
+		F.Intrinsic.File.MoveFile(V.Local.sFQN,V.Local.sFQN2,V.Local.iRet)
+		F.Intrinsic.Control.If(V.Local.iRet,=,0)
+			F.Intrinsic.String.Concat("Error: Renaming file ",V.Local.sFQN," to ",V.Local.sFQN2," failed.",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Concat("Renaming file ",V.Local.sFQN," to ",V.Local.sFQN2," succeeded.",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Import\History\",V.Local.sBackup,V.Local.sFQN)
+		F.Intrinsic.File.MoveFile(V.Local.sFQN2,V.Local.sFQN,V.Local.iRet)
+		F.Intrinsic.Control.If(V.Local.iRet,=,0)
+			F.Intrinsic.String.Concat("Error: Moving file ",V.Local.sFQN," to ",V.Local.sFQN2," failed.",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Concat("Moving file ",V.Local.sFQN," to ",V.Local.sFQN2," succeeded.",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iC)
+
+'F.Intrinsic.String.RemoveArrayDuplicates("V.uGlobal.uOps","V.uGlobal.uOps")
+
+F.Intrinsic.Math.Sub(V.uGlobal.uOps.UBound,1,V.Local.iUB)
+F.Intrinsic.Control.If(V.Local.iUB,=,-1)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine","No job operations imports were found.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+V.uGlobal.uOps.RedimPreserve(0,V.Local.iUB)
+
+'Add the UDT records to the database
+F.ODBC.Connection!conX.OpenRecordsetRW("rst","SELECT * FROM JOB_OPERATIONS")
+	F.Intrinsic.Variable.SaveUDTtoRecordset("conX","rst","V.uGlobal.uOps")
+F.ODBC.conX!rst.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Job_operations_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: ATG_JOB_IMPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.Job_operations.End
+
+Program.Sub.Import_Record.Start
+F.Intrinsic.Control.SetErrorHandler("Import_Record_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sRecord.Declare(String)
+V.Local.sFile.Declare(String)
+V.Local.sQuery.Declare(String)
+V.Local.sReturn.Declare(String)
+V.Local.sTemp.Declare(String)
+V.Local.iMode.Declare(Long)
+V.Local.iC.Declare(Long)
+V.Local.iUB.Declare(Long)
+V.Local.bMisc.Declare(Boolean)
+
+V.Local.sRecord.Set(V.Args.sRecord)
+V.Local.iMode.Set(V.Args.iMode)
+V.Local.sFile.Set(V.Args.sFile)
+V.Local.bMisc.set(V.Args.bMisc)
+
+F.Intrinsic.String.SplitCSV(V.Local.sRecord,V.Local.sRecord)
+
+F.Intrinsic.Control.If(V.Local.sRecord.UBound,<,6)
+	V.Local.sRecord.Set(V.Args.sRecord)
+	F.Intrinsic.String.Split(V.Local.sRecord,",",V.Local.sRecord)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.SelectCase(V.Local.iMode)
+F.Intrinsic.Control.case(1)
+'master import
+	F.Intrinsic.String.Concat("SELECT * FROM JOB_HEADER WHERE lower(JOB) = '",V.Local.sRecord(0).LCase,"' AND lower(SUFFIX) = '",V.Local.sRecord(1).lcase,"'",V.Local.sQuery)
+	F.ODBC.Connection!conX.OpenLocalRecordsetRW("rst",V.Local.sQuery)
+	F.Intrinsic.Control.If(V.ODBC.conX!rst.EOF,=,True)
+		F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uMaster!Job,V.Local.sRecord(0),V.uGlobal.uMaster!Suffix,V.Local.sRecord(1),V.Local.sReturn)
+		F.Intrinsic.Control.If(V.Local.sReturn,=,"")
+			V.Local.iUB.Set(V.uGlobal.uMaster.UBound)
+			'WO number, suffix, date opened, date due, part num, router num, run qty
+			V.uGlobal.uMaster(V.Local.iUB)!Job.Set(V.Local.sRecord(0))
+			V.uGlobal.uMaster(V.Local.iUB)!SUFFIX.Set(V.Local.sRecord(1))
+			V.uGlobal.uMaster(V.Local.iUB)!DATE_OPENED.set(V.Local.sRecord(2))
+			V.uGlobal.uMaster(V.Local.iUB)!DATE_DUE.Set(V.Local.sRecord(3))
+			V.uGlobal.uMaster(V.Local.iUB)!PART.Set(V.Local.sRecord(4))
+			F.Intrinsic.String.Concat("SELECT DESCRIPTION FROM INVENTORY_MSTR WHERE PART = '",V.Local.sRecord(4),"'",V.Local.sQuery)
+			F.ODBC.Connection!conX.OpenLocalRecordsetRO("rstInv",V.Local.sQuery)
+			F.Intrinsic.Control.If(V.ODBC.conX!rstInv.EOF,<>,True)
+				V.uGlobal.uMaster(V.Local.iUB)!PART_DESCRIPTION.Set(V.ODBC.conX!rstInv.FieldValTrim!DESCRIPTION)
+			F.Intrinsic.Control.EndIf
+			F.ODBC.conX!rstInv.Close
+			V.uGlobal.uMaster(V.Local.iUB)!ROUTER.set(V.Local.sRecord(5))
+			F.Intrinsic.String.Concat("SELECT DESCRIPTION_ROUTER FROM ROUTER_HEADER WHERE ROUTER = '",V.Local.sRecord(5),"' AND ROUTER_TYPE = 'H'",V.Local.sQuery)
+			F.ODBC.Connection!conX.OpenLocalRecordsetRO("rstRouter",V.Local.sQuery)
+			F.Intrinsic.Control.If(V.ODBC.conX!rstRouter.EOF,<>,True)
+				V.uGlobal.uMaster(V.Local.iUB)!ROUTER_DESCRIPTION.Set(V.ODBC.conX!rstRouter.FieldValTrim!DESCRIPTION_ROUTER)
+			F.Intrinsic.Control.EndIf
+			F.ODBC.conX!rstRouter.Close
+			V.uGlobal.uMaster(V.Local.iUB)!QTY_ORDER.set(V.Local.sRecord(6))
+
+			'zero out the rest of the UDT record
+			F.Intrinsic.Control.CallSub(Zero_rec,"iMode",1,"iUB",V.Local.iUB)
+
+			F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+			V.uGlobal.uMaster.RedimPreserve(0,V.Local.iUB)
+			F.Intrinsic.String.Concat("File :",V.Local.sFile," Job ",V.Local.sRecord(0)," Suffix ",V.Local.sRecord(1)," written to Master UDT successfully",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.Else
+			Function.Intrinsic.String.Concat("File :",V.Local.sFile," Job ",V.Local.sRecord(0)," Suffix ",V.Local.sRecord(1)," already exists in import list. ",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Else
+		'error, record already exists
+		Function.Intrinsic.String.Concat("File :",V.Local.sFile," Job ",V.Local.sRecord(0)," Suffix ",V.Local.sRecord(1)," already exists in JOB_HEADER. Import of this record failed. ",V.Local.sError)
+		F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+	F.Intrinsic.Control.EndIf
+
+	F.ODBC.conX!rst.Close
+F.Intrinsic.Control.case(2)
+
+'operation import
+	F.Intrinsic.String.Concat("SELECT * FROM JOB_OPERATIONS WHERE lower(JOB) = '",V.Local.sRecord(0).LCase,"' AND lower(SUFFIX) = '",V.Local.sRecord(1).LCase,"' AND lower(SEQ) = '",V.Local.sRecord(2).LCase,"'",V.Local.sQuery)
+	F.ODBC.Connection!conX.OpenLocalRecordsetRW("rst",V.Local.sQuery)
+	F.Intrinsic.Control.If(V.ODBC.conX!rst.EOF,=,True)
+		F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uOps!Job,V.Local.sRecord(0),V.uGlobal.uOps!Suffix,V.Local.sRecord(1),V.uGlobal.uOps!Seq,V.Local.sRecord(2),V.Local.sReturn)
+		F.Intrinsic.Control.If(V.Local.sReturn,=,"")
+			V.Local.iUB.Set(V.uGlobal.uOps.UBound)
+			'WO num, suffix, seq, operation, desc of operation, LMOC, setup time req, PWC
+			V.uGlobal.uOps(V.Local.iUB)!JOB.Set(V.Local.sRecord(0))
+			V.uGlobal.uOps(V.Local.iUB)!SUFFIX.Set(V.Local.sRecord(1))
+			F.Intrinsic.String.LPad(V.Local.sRecord(2),"0",6,V.Local.sTemp)
+			V.uGlobal.uOps(V.Local.iUB)!SEQ.Set(V.Local.sTemp)
+			V.uGlobal.uOps(V.Local.iUB)!OPERATION.Set(V.Local.sRecord(3))
+'			V.uGlobal.uOps(V.Local.iUB)!OPERATION.Set("")
+			F.Intrinsic.Control.If(V.Local.bMisc,=,False)
+				F.Intrinsic.Control.CallSub(Format_desc,"sDesc",V.Local.sRecord(4))
+				V.uGlobal.uOps(V.Local.iUB)!DESCRIPTION.Set(V.Args.sDesc)
+			F.Intrinsic.Control.Else
+				V.uGlobal.uOps(V.Local.iUB)!DESCRIPTION.Set(V.Local.sRecord(4))
+			F.Intrinsic.Control.EndIf
+			V.uGlobal.uOps(V.Local.iUB)!LMO.set(V.Local.sRecord(5))
+			V.uGlobal.uOps(V.Local.iUB)!SETUP.set(V.Local.sRecord(6))
+			V.uGlobal.uOps(V.Local.iUB)!PART.set(V.Local.sRecord(7))
+			F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uMaster!Job,V.Local.sRecord(0),V.uGlobal.uMaster!Suffix,V.Local.sRecord(1),V.Local.sTemp)
+			F.Intrinsic.Control.If(V.Local.sTemp,<>,"")
+				V.uGlobal.uOps(V.Local.iUB)!Date_Start.Set(V.uGlobal.uMaster(V.Local.sTemp)!Date_Opened)
+				V.uGlobal.uOps(V.Local.iUB)!Date_Due.Set(V.uGlobal.uMaster(V.Local.sTemp)!Date_Due)
+			F.Intrinsic.Control.Else
+				V.uGlobal.uOps(V.Local.iUB)!Date_Start.Set("000000")
+				V.uGlobal.uOps(V.Local.iUB)!Date_Due.Set("000000")
+			F.Intrinsic.Control.EndIf
+
+			'zero out the rest of the UDT record
+			F.Intrinsic.Control.CallSub(Zero_rec,"iMode",2,"iUB",V.Local.iUB)
+
+			F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+			V.uGlobal.uOps.RedimPreserve(0,V.Local.iUB)
+			F.Intrinsic.String.Concat("File :",V.Local.sFile," Job ",V.Local.sRecord(0)," Suffix ",V.Local.sRecord(1)," Seq ",V.Local.sRecord(2)," written to Ops UDT successfully",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.Else
+			Function.Intrinsic.String.Concat("File :",V.Local.sFile," Job ",V.Local.sRecord(0)," Suffix ",V.Local.sRecord(1)," Seq ",V.Local.sRecord(2)," already exists in import list. ",V.Local.sError)
+			F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Else
+		'error, record already exists
+		Function.Intrinsic.String.Concat("File :",V.Local.sFile," Job ",V.Local.sRecord(0)," Suffix ",V.Local.sRecord(1)," Sequence ",V.Local.sRecord(2)," already exists in JOB_OPRATIONS. Import of this record failed. ",V.Local.sError)
+		F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+	F.Intrinsic.Control.EndIf
+	F.ODBC.conX!rst.Close
+F.Intrinsic.Control.EndSelect
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Import_Record_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: ATG_JOB_IMPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.Import_Record.End
+
+Program.Sub.Write_Error.Start
+F.Intrinsic.Control.SetErrorHandler("Write_Error_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sLine.Declare(String)
+
+V.Local.sLine.Set(V.Args.sLine)
+
+F.Intrinsic.File.WriteLine(V.Global.iErrHndl,V.Local.sLine)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Write_Error_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: ATG_JOB_IMPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.Write_Error.End
+
+Program.Sub.Zero_Rec.Start
+F.Intrinsic.Control.SetErrorHandler("Zero_Rec_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sToday.Declare(String)
+V.Local.iMode.Declare(Long)
+V.Local.iUB.Declare(Long)
+
+V.Local.iMode.Set(V.Args.iMode)
+V.Local.iUB.Set(V.Args.iUB)
+F.Intrinsic.String.Format(V.Ambient.Now,"YYMMDD",V.Local.sToday)
+
+'zero out the job header rec for iUB
+F.Intrinsic.Control.If(V.Local.iMode,=,1)
+V.UDT.Master.Define("PRIORITY",String,"PRIORITY")
+	V.uGlobal.uMaster(V.Local.iUB)!QTY_COMPLETED.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_CLOSED.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_START.Set(V.Local.sToday)
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_SCH_CMPL_INF.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_SCH_CMPL_FIN.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_LAST_SCH_INF.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_ORIG_DUE.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!AMT_PRICE_PER_UNIT.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!AMT_SALES.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!AMT_MATERIAL.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!NUM_HOURS.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!AMT_LABOR.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!AMT_OVERHEAD.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!AMT_PARTIAL_SHPMNT.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_START_OTHER.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!HOUR_START.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!SYSTEM_PRIORITY.Set(000)
+	V.uGlobal.uMaster(V.Local.iUB)!AMT_BILLED_DATE.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!UNITS_BILLED_DATE.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_SHIP_1.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_SHIP_2.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_SHIP_3.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_SHIP_4.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!QTY_SHIP_1.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!QTY_SHIP_2.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!QTY_SHIP_3.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!QTY_SHIP_4.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_LAST_SCH_FIN.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_DUE_NEW.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!CTR_DATE_REVUE_DUE.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!CTR_DATE_DUE_NEW.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!QTY_CUSTOMER.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_MATERIAL_DUE.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!CTR_DATE_MATL_DUE.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_MATL_ORDER.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!PARTIAL_MATERIAL.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!PARTIAL_LABOR.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!PARTIAL_OVERHEAD.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!DATE_RELEASED.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!SALES_ORDER.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!SALES_ORDER_LINE.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!OUTS.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!PARTIAL_OUTSIDE.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!SCHEDULED_DUE_DATE.Set("000000")
+	V.uGlobal.uMaster(V.Local.iUB)!DUE_OFFSET.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!SCHEDULE_DIR.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!SPECIAL_START_SEQ.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!SPECIAL_STOP_SEQ.Set(0)
+	V.uGlobal.uMaster(V.Local.iUB)!JOB_TYPE.Set("M")
+
+'zero out the job ops rec for iUB
+F.Intrinsic.Control.ElseIf(V.Local.iMode,=,2)
+	V.uGlobal.uOps(V.Local.iUB)!WO_Insert.Set("00")
+	V.uGlobal.uOps(V.Local.iUB)!Units.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Burden.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Router.Set("")
+	V.uGlobal.uOps(V.Local.iUB)!Router_Seq.Set("000000")
+	V.uGlobal.uOps(V.Local.iUB)!Units_Open.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Units_Complete.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Percent_Complete.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Units_Scrap.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Units_Committed.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Dollars_Committed.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Rate_Burden.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Hours_Estimated.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Hours_Actual.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Dollars_Estimated.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Dollars_Actual.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!Min_Sched_Block.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!TIME_START.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!MACHINE_HRS.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!ALLOW_CHRG.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!DATE_ARRIVED.Set("000000")
+	V.uGlobal.uOps(V.Local.iUB)!TIME_ARRIVED.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!DATE_MATERIAL_DUE.Set("000000")
+	V.uGlobal.uOps(V.Local.iUB)!DATE_COMPLETED.Set("000000")
+	V.uGlobal.uOps(V.Local.iUB)!TIME_ELAPSED.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!FACTOR_WORKCENTER.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!FACTOR_FINITE.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!OVERLAP.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!DATE_PO_ORDER.Set("000000")
+	V.uGlobal.uOps(V.Local.iUB)!SEQ_PO.Set("000")
+	V.uGlobal.uOps(V.Local.iUB)!YIELD.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!YIELD_RATIO.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!TASK_SIGNOFF_DATE.Set("000000")
+	V.uGlobal.uOps(V.Local.iUB)!DATE_OPER_SK_YEAR.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!DATE_OPER_SK_MDY.Set("000000")
+	V.uGlobal.uOps(V.Local.iUB)!DATE_OPER_ST_YEAR.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!DATE_OPER_ST_MDY.Set("000000")
+	V.uGlobal.uOps(V.Local.iUB)!CREW_SIZE.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!RATE_PIECE.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!TIME_DUE.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!FREQUENCY.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!UNIT_D6.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!PRICE_PERCENT.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!LEAD_TIME.Set(0)
+	V.uGlobal.uOps(V.Local.iUB)!E_MINIMUM.Set(0)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Zero_Rec_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: ATG_JOB_IMPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Zero_Rec.End
+
+Program.Sub.Check_processes.Start
+F.Intrinsic.Control.SetErrorHandler("Check_processes_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sProcList.Declare(String)
+V.Local.sProcess.Declare(String)
+V.Local.bRunning.Declare(Boolean)
+V.Local.iC.Declare(Long)
+
+'F.Intrinsic.Debug.InvokeDebugger
+
+V.Local.bRunning.Set(False)
+F.Intrinsic.Task.GetProcessList(V.Local.sProcList)
+F.Intrinsic.String.Split(V.Local.sProcList,"*!*",V.Local.sProcList)
+F.Intrinsic.Control.For(V.Local.iC,0,V.Local.sProcList.UBound,1)
+	V.Local.sProcess.Set(V.Local.sProcList(V.Local.iC))
+	F.Intrinsic.String.Split(V.Local.sProcess,"!*!",V.Local.sProcess)
+	F.Intrinsic.Control.If(V.Local.sProcess(1),=,"wruncbl.exe")
+		V.Local.bRunning.Set(True)
+		F.Intrinsic.Control.ExitFor(V.Local.iC)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iC)
+
+F.Intrinsic.Variable.AddRV("bRunning",V.Local.bRunning)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Check_processes_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: ATG_JOB_IMPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Check_processes.End
+
+Program.Sub.format_desc.Start
+F.Intrinsic.Control.SetErrorHandler("format_desc_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sDesc.Declare(String)
+V.Local.sNewDesc.Declare(String)
+V.Local.iAsc.Declare(Long)
+V.Local.iC.Declare(Long)
+V.Local.iStart.Declare(Long)
+V.Local.iCounter.Declare(Long)
+V.Local.iMax.Declare(Long)
+V.Local.bRet.Declare(Boolean)
+
+V.Local.sDesc.Set(V.Args.sDesc)
+F.Intrinsic.String.Replace(V.Local.sDesc," ","~",V.Local.sDesc)
+
+F.Intrinsic.String.LimitSplit(V.Local.sDesc,1,V.Local.sDesc)
+F.Intrinsic.Control.If(V.Local.sDesc.UBound,>,29)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine","Operations description is longer than 30 characters. This program will automatically shorten the description to fit.")
+F.Intrinsic.Control.EndIf
+
+V.Local.sNewDesc.Set("")
+V.Local.iCounter.Set(0)
+
+F.Intrinsic.Control.If(V.Local.sDesc(V.Local.sDesc.UBound),=,"'")
+	F.Intrinsic.Math.Sub(V.Local.sDesc.UBound,1,V.Local.iMax)
+F.Intrinsic.Control.Else
+	V.Local.iMax.Set(V.Local.sDesc.UBound)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Local.sDesc(0),=,"'")
+	V.Local.iStart.Set(1)
+F.Intrinsic.Control.Else
+	V.Local.iStart.Set(0)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.For(V.Local.iC,V.Local.iStart,V.Local.iMax,1)
+	F.Intrinsic.Control.If(V.Local.iCounter,=,30)
+		F.Intrinsic.Control.ExitFor(V.Local.iC)
+	F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.Control.If(V.Local.sDesc(V.Local.iC),=,"~")
+		V.Local.sDesc(V.Local.iC).Set(" ")
+	F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.String.Asc(V.Local.sDesc(V.Local.iC),V.Local.iAsc)
+	F.Intrinsic.Control.If(V.Local.iAsc,=,34)
+		'these characters need to be in quotes
+		F.Intrinsic.String.Concat(V.Local.sNewDesc,V.Ambient.DblQuote,V.Local.sNewDesc)
+	F.Intrinsic.Control.ElseIf(V.Local.iAsc,=,39)
+		'these characters need to be in quotes
+		F.Intrinsic.String.Concat(V.Local.sNewDesc,"'",V.Local.sNewDesc)
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Concat(V.Local.sNewDesc,V.Local.sDesc(V.Local.iC),V.Local.sNewDesc)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Math.Add(V.Local.iCounter,1,V.Local.iCounter)
+F.Intrinsic.Control.Next(V.Local.iC)
+
+F.Intrinsic.Variable.AddRV("sDesc",V.Local.sNewDesc)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("format_desc_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: ATG_JOB_IMPORT.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.Control.CallSub(Write_error,"sLine",V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.format_desc.End
+
+
